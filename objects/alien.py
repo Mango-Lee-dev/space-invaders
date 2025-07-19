@@ -1,11 +1,17 @@
 import pygame
 
-class Fighter:
+class Alien:
   def __init__(self):
-    image = pygame.image.load("assets/images/fighter.png")
+    image = pygame.image.load("assets/images/alien1.png")
     self.scale_up_image = pygame.transform.scale(image, (image.get_width() * 2, image.get_height() * 2))
-    self.x = 640 / 2 - self.scale_up_image.get_width() / 2
-    self.y = 480 - self.scale_up_image.get_height() - 10
+    
+    self.x = 0
+    self.y = 0
+
+  def set_position(self, x, y):
+    """Set alien position"""
+    self.x = x
+    self.y = y
 
   def draw(self, surface):
     surface.blit(self.scale_up_image, (self.x, self.y))
