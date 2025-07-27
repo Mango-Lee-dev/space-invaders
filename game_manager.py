@@ -3,7 +3,7 @@ from objects.fighter import Fighter
 from objects.alien import Alien
 from constants import (
     ALIEN_ROWS, ALIEN_COLS, ALIEN_START_X, ALIEN_START_Y,
-    ALIEN_SPACING_X, ALIEN_SPACING_Y, FIGHTER_SPEED, BLACK
+    ALIEN_SPACING_X, ALIEN_SPACING_Y, FIGHTER_SPEED, BLACK, FPS
 )
 
 class GameManager:
@@ -24,25 +24,32 @@ class GameManager:
                 )
                 self.aliens.append(alien)
     
-    def handle_events(self):
+    def handle_events(self, clock):
         """Handle pygame events"""
+        delta_seconds = clock.tick(FPS) / 1000
+        
+        keys = pygame.key.get_pressed()
+        dx, dy = 0, 0
+        
+        if keys[pygame.K_LEFT]:
+            dx = -1
+        elif keys[pygame.K_RIGHT]:
+            dx = 1
+        if keys[pygame.K_UP]:
+            dy = -1
+        elif keys[pygame.K_DOWN]:
+            dy = 1
+        
+        # delta_seconds를 활용한 자연스러운 움직임
+        distance_x = FIGHTER_SPEED * dx * delta_seconds
+        distance_y = FIGHTER_SPEED * dy * delta_seconds
+        
+        if dx != 0 or dy != 0:
+            self.fighter.move(distance_x, distance_y)
+        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
-            elif event.type == pygame.KEYDOWN:
-                self._handle_keydown(event.key)
-    
-    def _handle_keydown(self, key):
-        """Handle key press events"""
-        if key == pygame.K_LEFT:
-            self.fighter.move(-FIGHTER_SPEED, 0)
-        elif key == pygame.K_RIGHT:
-            self.fighter.move(FIGHTER_SPEED, 0)
-        elif key == pygame.K_UP:
-            self.fighter.move(0, -FIGHTER_SPEED)
-        elif key == pygame.K_DOWN:
-            self.fighter.move(0, FIGHTER_SPEED)
-    
     def update(self):
         """Update game state"""
         # TODO: 게임 로직 구현

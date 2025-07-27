@@ -13,7 +13,7 @@ def main():
 	game = GameManager()
 	
 	while game.running:
-		game.handle_events()
+		game.handle_events(clock)
 		game.update()
 		game.render(surface)
 		
